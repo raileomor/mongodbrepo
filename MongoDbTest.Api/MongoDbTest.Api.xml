@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MongoDbTest.Api</name>
+    </assembly>
+    <members>
+        <member name="T:MongoDbTest.Api.Controllers.AccountsController">
+            <summary>
+            Accounts Administrator
+            </summary>
+            <summary xml:lang="es">
+            Administrador de cuentas
+            </summary>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.#ctor(MongoDbTest.Infrastructure.Interfaces.IAccountServices)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="accountService"></param>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.Get">
+            <summary>
+            Get Account
+            </summary>
+            <summary xml:lang="es">
+            Obtener Cuenta
+            </summary>
+            <returns>Return Account</returns>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.Get(System.String)">
+            <summary>
+            Get Account by Id
+            </summary>
+            <summary xml:lang="es">
+            Obtener Cuenta por Id
+            </summary>
+            <param name="id"></param>
+            <returns>Return Account</returns>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.FindAccounts(MongoDbTest.Infrastructure.Models.Account)">
+            <summary>
+            Get Accounts by filter
+            </summary>
+            <summary xml:lang="es">
+            Obtener Cuentas por filtro
+            </summary>
+            <param name="accountFilter"></param>
+            <returns>Return Accounts</returns>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.Create(MongoDbTest.Infrastructure.Models.Account)">
+            <summary>
+            Create Account
+            </summary>
+            <summary xml:lang="es">
+            Crear Cuenta
+            </summary>
+            <param name="account"></param>
+            <returns>Return Account</returns>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.Update(System.String,MongoDbTest.Infrastructure.Models.Account)">
+            <summary>
+            Update Account
+            </summary>
+            <summary xml:lang="es">
+            Actualizar Cuenta
+            </summary>
+            <param name="id"></param>
+            <param name="accountIn"></param>
+            <returns>Return No Content</returns>
+        </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.Delete(System.String)">
+            <summary>
+            Delete Account
+            </summary>
+            <summary xml:lang="es">
+            Eliminar Cuenta
+            </summary>
+            <param name="id"></param>
+            <returns>Return No Content</returns>
+        </member>
+        <member name="T:MongoDbTest.Api.Infrastructure.ApiInitialize">
+            <summary>
+            Initialize
+            </summary>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.Initialize(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="services">Services</param>
+            <param name="configuration">Configuration</param>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.AddScoped(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>/
+            Add services
+            </summary>
+            <param name="services">Services</param>
+            <param name="configuration">Configuration</param>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.Use(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Define API features
+            </summary>
+            <param name="app">Application</param>
+            <param name="configuration">Configuration</param>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.AddConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Add configuration
+            </summary>
+            <param name="services">Services</param>
+            <param name="configuration">Configuration</param>
+        </member>
+        <member name="T:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration">
+            <summary>
+            Swagger Configuration
+            </summary>
+            <summary xml:lang="es">
+            Configuración del swagger  
+            </summary>
+        </member>
+        <member name="P:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.Title">
+            <summary>
+            Tittle of endpoint
+            </summary>
+            <summary xml:lang="es">
+            Título del endpoint     
+            </summary>
+        </member>
+        <member name="P:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.Description">
+            <summary>
+            Description of endpoint
+            </summary>
+            <summary xml:lang="es">
+            Descripción del endpoint     
+            </summary>
+        </member>
+        <member name="P:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.EndpointUrl">
+            <summary>
+            URL of endpoint
+            </summary>
+            <summary xml:lang="es">
+            URL del endpoint     
+            </summary>
+        </member>
+        <member name="P:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.EndpointDescription">
+            <summary>
+            Description of endpoint
+            </summary>
+            <summary xml:lang="es">
+            Descripción del endpoint     
+            </summary>
+        </member>
+        <member name="P:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.Version">
+            <summary>
+            Version of endpoint
+            </summary>
+            <summary xml:lang="es">
+            Versión del endpoint     
+            </summary>
+        </member>
+        <member name="P:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.HostPath">
+            <summary>
+            Host Path
+            </summary>
+            <summary xml:lang="es">
+            Dirección del servidor
+            </summary>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.Configurations.SwaggerConfiguration.GetOpenApiInfo">
+            <summary>
+            Create new Api Info
+            </summary>
+            <summary xml:lang="es">
+            Crea un nuevo objeto para ocupar en el  swagger extensión
+            </summary>
+        </member>
+        <member name="T:MongoDbTest.Api.Program">
+            <summary>
+            Program
+            </summary>
+        </member>
+        <member name="M:MongoDbTest.Api.Program.Main(System.String[])">
+            <summary>
+            Program main
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:MongoDbTest.Api.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Create Host
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MongoDbTest.Api.Startup">
+            <summary>
+            Startup
+            </summary>
+        </member>
+        <member name="M:MongoDbTest.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="configuration">Configuracion</param>
+            <param name="env">Ambiente</param>
+        </member>
+        <member name="P:MongoDbTest.Api.Startup.Configuration">
+            <summary>
+            Configuracion
+            </summary>
+        </member>
+        <member name="M:MongoDbTest.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Agregar metodos y servicios
+            </summary>
+            <param name="services">Servicios</param>
+        </member>
+        <member name="M:MongoDbTest.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configurar los HTTP request pipeline.
+            </summary>
+            <param name="app">Aplicacion</param>
+            <param name="env">Ambiente</param>
+        </member>
+    </members>
+</doc>
