@@ -33,8 +33,13 @@ namespace MongoDbTest.Infrastructure.Repositories
 
         public IMongoCollection<TDocument> GetCollection<TDocument>() where TDocument: IMongodbBaseModel
         {
-            var collection = typeof(TDocument).GetCustomAttribute<TableAttribute>(false).Name;
+            var collection = GetCollectionName<TDocument>();
             return Database.GetCollection<TDocument>(collection);
+        }
+
+        protected virtual string GetCollectionName<TDocument>()
+        {
+            return typeof(TDocument).GetCustomAttribute<TableAttribute>(false).Name;
         }
     }
 }
