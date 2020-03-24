@@ -7,25 +7,25 @@ using MongoDbTest.Infrastructure.Interfaces;
 
 namespace MongoDbTest.Infrastructure.Repositories
 {
-    public abstract class MongoDbBaseRepository<TEntity> : IMongoDbBaseRepository<TEntity> where TEntity : class, IMongodbBaseModel
+    public abstract class MongoDbBaseRepository<TDocument> : IMongoDbBaseRepository<TDocument> where TDocument : class, IMongodbBaseModel
     {
         private readonly IMongoDbRepositoryContext _mongoContext;
-        public IMongoCollection<TEntity> Collection { get; private set; }
+        public IMongoCollection<TDocument> Collection { get; private set; }
 
         protected MongoDbBaseRepository(IMongoDbRepositoryContext context)
         {
             _mongoContext = context;
-            Collection = _mongoContext.DbSet<TEntity>();
+            Collection = _mongoContext.GetCollection<TDocument>();
         }
 
-        public async Task<TEntity> CreateAsync(TEntity obj)
+        public async Task<TDocument> CreateAsync(TDocument obj)
         {
             if (obj == null)
             {
-                throw new ArgumentNullException(typeof(TEntity).Name + " object is null");
+                throw new ArgumentNullException(typeof(TDocument).Name + " object is null");
             }
 
-            Collection = _mongoContext.DbSet<TEntity>();
+            Collection = _mongoContext.GetCollection<TDocument>();
             await Collection.InsertOneAsync(obj);
             
             return obj;
@@ -38,58 +38,58 @@ namespace MongoDbTest.Infrastructure.Repositories
                 return false;
             }
             
-            var deleted = await Collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("_id", objectId));
+            var deleted = await Collection.DeleteOneAsync(Builders<TDocument>.Filter.Eq("_id", objectId));
 
             return deleted != null;
         }
 
-        public async Task<bool> ReplaceAsync(TEntity obj)
+        public async Task<bool> ReplaceAsync(TDocument obj)
         {
             if (!ObjectId.TryParse(obj.Id, out var objectId))
             {
                 return false;
             }
 
-            var filter = Builders<TEntity>.Filter.Eq("_id", objectId);
+            var filter = Builders<TDocument>.Filter.Eq("_id", objectId);
             var updated = await Collection.ReplaceOneAsync(filter, obj);
 
             return updated != null && updated.IsAcknowledged && updated.ModifiedCount != 0;
         }
 
-        public async Task<bool> UpdateSetAsync(TEntity obj, string name, object value)
+        public async Task<bool> UpdateSetAsync(TDocument obj, string name, object value)
         {
             if (!ObjectId.TryParse(obj.Id, out var objectId))
             {
                 return false;
             }
 
-            var upsertAdd = Builders<TEntity>.Update.Set(name, value);
-            var filter = Builders<TEntity>.Filter.Eq("_id", objectId);
+            var upsertAdd = Builders<TDocument>.Update.Set(name, value);
+            var filter = Builders<TDocument>.Filter.Eq("_id", objectId);
             var updated = await Collection.UpdateOneAsync(filter, upsertAdd);
 
             return updated != null && updated.IsAcknowledged && updated.ModifiedCount != 0;
         }
 
-        public async Task<TEntity> GetAsync(string id)
+        public async Task<TDocument> GetAsync(string id)
         {
             var objectId = new ObjectId(id);
 
-            FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq("_id", objectId);
+            FilterDefinition<TDocument> filter = Builders<TDocument>.Filter.Eq("_id", objectId);
 
-            Collection = _mongoContext.DbSet<TEntity>();
+            Collection = _mongoContext.GetCollection<TDocument>();
 
             return await Collection.FindAsync(filter).Result.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAsync()
+        public async Task<IEnumerable<TDocument>> GetAsync()
         {
-            var all = await Collection.FindAsync(Builders<TEntity>.Filter.Empty);
+            var all = await Collection.FindAsync(Builders<TDocument>.Filter.Empty);
             return await all.ToListAsync();
         }
         
-        public async Task<IEnumerable<TEntity>> GetAsync(TEntity obj)
+        public async Task<IEnumerable<TDocument>> GetAsync(TDocument obj)
         {
-            var all = await Collection.FindAsync(Builders<TEntity>.Filter.Empty);
+            var all = await Collection.FindAsync(Builders<TDocument>.Filter.Empty);
             return await all.ToListAsync();
         }
     }

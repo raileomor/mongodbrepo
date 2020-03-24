@@ -69,6 +69,7 @@ namespace MongoDbTest.Api
 
             app.Use(Configuration);
             app.UseCors(AllowSpecificOrigins);
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRouting();
 

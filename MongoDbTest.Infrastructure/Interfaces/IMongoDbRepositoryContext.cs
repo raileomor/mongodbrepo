@@ -8,6 +8,6 @@ namespace MongoDbTest.Infrastructure.Interfaces
 {
     public interface IMongoDbRepositoryContext
     {
-        IMongoCollection<T> DbSet<T>() where T : IMongodbBaseModel;
+        IMongoCollection<TDocument> GetCollection<TDocument>() where TDocument : IMongodbBaseModel;
     }
 }

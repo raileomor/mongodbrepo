@@ -14,7 +14,7 @@ namespace MongoDbTest.Api.Controllers
     /// <summary xml:lang="es">
     /// Administrador de cuentas
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/accounts")]
     [ApiController]
     public class AccountsController : ControllerBase
     {

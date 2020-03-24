@@ -6,20 +6,20 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Interfaces
 {
-    public interface IMongoDbBaseRepository<TEntity> where TEntity : class
+    public interface IMongoDbBaseRepository<TDocument> where TDocument : class
     {
-        Task<TEntity> CreateAsync(TEntity obj);
+        Task<TDocument> CreateAsync(TDocument obj);
 
-        Task<bool> ReplaceAsync(TEntity obj);
+        Task<bool> ReplaceAsync(TDocument obj);
         
-        Task<bool> UpdateSetAsync(TEntity obj, string name, object value);
+        Task<bool> UpdateSetAsync(TDocument obj, string name, object value);
 
         Task<bool> DeleteAsync(string id);
 
-        Task<TEntity> GetAsync(string id);
+        Task<TDocument> GetAsync(string id);
 
-        Task<IEnumerable<TEntity>> GetAsync();
+        Task<IEnumerable<TDocument>> GetAsync();
         
-        Task<IEnumerable<TEntity>> GetAsync(TEntity obj);
+        Task<IEnumerable<TDocument>> GetAsync(TDocument obj);
     }
 }

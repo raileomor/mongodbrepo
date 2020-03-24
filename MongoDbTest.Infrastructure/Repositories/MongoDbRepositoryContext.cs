@@ -13,34 +13,28 @@ namespace MongoDbTest.Infrastructure.Repositories
 {
     public class MongoDbRepositoryContext : IMongoDbRepositoryContext
     {
-        private readonly MongoDbConfiguration _mongoDbConfiguration;
-        private MongoClient _client { get; set; }
-        private IMongoDatabase _db { get; set; }
+        public IMongoClient Client { get; protected set; }
+        public IMongoDatabase Database { get; protected set; }
+
         public IClientSessionHandle Session { get; set; }
 
         public MongoDbRepositoryContext(IOptions<MongoDbConfiguration> mongoDbConfiguration)
         {
-            _mongoDbConfiguration = mongoDbConfiguration.Value;
-            OpenConnection();
-        }
+            var mongoDbConfig = mongoDbConfiguration.Value;
 
-        public IMongoDatabase OpenConnection()
-        {
             var databaseSettings = new MongoDatabaseSettings
             {
                 GuidRepresentation = GuidRepresentation.Standard
             };
 
-            _client = new MongoClient(_mongoDbConfiguration.ConnectionString);
-            _db = _client.GetDatabase(_mongoDbConfiguration.DatabaseName, databaseSettings);
-
-            return _db;
+            Client = new MongoClient(mongoDbConfig.ConnectionString);
+            Database = Client.GetDatabase(mongoDbConfig.DatabaseName, databaseSettings);
         }
 
-        public IMongoCollection<T> DbSet<T>() where T: IMongodbBaseModel
+        public IMongoCollection<TDocument> GetCollection<TDocument>() where TDocument: IMongodbBaseModel
         {
-            var collection = typeof(T).GetCustomAttribute<TableAttribute>(false).Name;
-            return _db.GetCollection<T>(collection);
+            var collection = typeof(TDocument).GetCustomAttribute<TableAttribute>(false).Name;
+            return Database.GetCollection<TDocument>(collection);
         }
     }
 }
