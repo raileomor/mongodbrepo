@@ -68,6 +68,17 @@
             <param name="accountIn"></param>
             <returns>Return No Content</returns>
         </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.UpdateProducts(System.String,MongoDbTest.Infrastructure.Models.Account)">
+            <summary>
+            Update Account
+            </summary>
+            <summary xml:lang="es">
+            Actualizar Cuenta
+            </summary>
+            <param name="id"></param>
+            <param name="accountIn"></param>
+            <returns>Return No Content</returns>
+        </member>
         <member name="M:MongoDbTest.Api.Controllers.AccountsController.Delete(System.String)">
             <summary>
             Delete Account
