@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -7,7 +8,7 @@ using MongoDbTest.Infrastructure.Interfaces;
 
 namespace MongoDbTest.Infrastructure.Repositories
 {
-    public abstract class MongoDbBaseRepository<TDocument> : IMongoDbBaseRepository<TDocument> where TDocument : class, IMongodbBaseModel
+    public abstract class MongoDbBaseRepository<TDocument> : IMongoDbBaseRepository<TDocument> where TDocument: IMongodbBaseModel
     {
         private readonly IMongoDbRepositoryContext _mongoContext;
         public IMongoCollection<TDocument> Collection { get; private set; }
@@ -18,32 +19,49 @@ namespace MongoDbTest.Infrastructure.Repositories
             Collection = _mongoContext.GetCollection<TDocument>();
         }
 
-        public async Task<TDocument> CreateAsync(TDocument obj)
+        #region Get
+
+        public async Task<IEnumerable<TDocument>> GetAllAsync()
+        {
+            var all = await Collection.FindAsync(Builders<TDocument>.Filter.Empty);
+            return await all.ToListAsync();
+        }
+
+        public async Task<TDocument> GetByIdAsync(string id)
+        {
+            var objectId = new ObjectId(id);
+
+            FilterDefinition<TDocument> filter = Builders<TDocument>.Filter.Eq("_id", objectId);
+
+            return await Collection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<TDocument> GetOneAsync(Expression<Func<TDocument, bool>> filter)
+        {
+            return await Collection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        #endregion
+
+        #region Create
+
+        public async Task<TDocument> InsertOneAsync(TDocument obj)
         {
             if (obj == null)
             {
                 throw new ArgumentNullException(typeof(TDocument).Name + " object is null");
             }
 
-            Collection = _mongoContext.GetCollection<TDocument>();
             await Collection.InsertOneAsync(obj);
             
             return obj;
         }
 
-        public async Task<bool> DeleteAsync(string id)
-        {
-            if (!ObjectId.TryParse(id, out var objectId))
-            {
-                return false;
-            }
-            
-            var deleted = await Collection.DeleteOneAsync(Builders<TDocument>.Filter.Eq("_id", objectId));
+        #endregion
 
-            return deleted != null;
-        }
+        #region Update
 
-        public async Task<bool> ReplaceAsync(TDocument obj)
+        public async Task<bool> ReplaceOneAsync(TDocument obj)
         {
             if (!ObjectId.TryParse(obj.Id, out var objectId))
             {
@@ -70,27 +88,22 @@ namespace MongoDbTest.Infrastructure.Repositories
             return updated != null && updated.IsAcknowledged && updated.ModifiedCount != 0;
         }
 
-        public async Task<TDocument> GetAsync(string id)
+        #endregion
+
+        #region Delete
+
+        public async Task<bool> DeleteAsync(string id)
         {
-            var objectId = new ObjectId(id);
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                return false;
+            }
 
-            FilterDefinition<TDocument> filter = Builders<TDocument>.Filter.Eq("_id", objectId);
+            var deleted = await Collection.DeleteOneAsync(Builders<TDocument>.Filter.Eq("_id", objectId));
 
-            Collection = _mongoContext.GetCollection<TDocument>();
-
-            return await Collection.FindAsync(filter).Result.FirstOrDefaultAsync();
+            return deleted != null;
         }
 
-        public async Task<IEnumerable<TDocument>> GetAsync()
-        {
-            var all = await Collection.FindAsync(Builders<TDocument>.Filter.Empty);
-            return await all.ToListAsync();
-        }
-        
-        public async Task<IEnumerable<TDocument>> GetAsync(TDocument obj)
-        {
-            var all = await Collection.FindAsync(Builders<TDocument>.Filter.Empty);
-            return await all.ToListAsync();
-        }
+        #endregion
     }
 }

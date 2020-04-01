@@ -14,7 +14,7 @@ namespace MongoDbTest.Api.Controllers
     /// <summary xml:lang="es">
     /// Administrador de cuentas
     /// </summary>
-    [Route("api/accounts")]
+    [Route("accounts")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -43,7 +43,8 @@ namespace MongoDbTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            var result = await _accountService.GetAsync();
+            var result = await _accountService.GetAllAsync();
+
             return Ok(result);
         }
 
@@ -62,7 +63,7 @@ namespace MongoDbTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Get(string id)
         {
-            var account = await _accountService.GetAsync(id);
+            var account = await _accountService.GetByIdAsync(id);
 
             if (account == null)
             {
@@ -88,7 +89,7 @@ namespace MongoDbTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> FindAccounts(Account accountFilter)
         {
-            var result = await _accountService.GetAsync(accountFilter);
+            var result = await _accountService.GetOneAsync(ac => ac.AccountId == accountFilter.AccountId);
 
             return Ok(result);
         }
@@ -108,7 +109,7 @@ namespace MongoDbTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Create(Account account)
         {
-            await _accountService.CreateAsync(account);
+            await _accountService.AddAsync(account);
 
             return CreatedAtRoute("GetAccount", new { id = account.Id }, account);
         }
@@ -129,14 +130,42 @@ namespace MongoDbTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Update(string id, Account accountIn)
         {
-            var account = await _accountService.GetAsync(id);
+            var account = await _accountService.GetByIdAsync(id);
 
             if (id != accountIn.Id || account == null || accountIn.Id != account.Id)
             {
                 return NotFound();
             }
 
-            await _accountService.UpdateSetAsync(accountIn, "products", accountIn.Products);
+            await _accountService.ReplaceAsync(id, accountIn);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Update Account
+        /// </summary>
+        /// <summary xml:lang="es">
+        /// Actualizar Cuenta
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="accountIn"></param>
+        /// <returns>Return No Content</returns>
+        [HttpPut("{id:length(24)}/products")]
+        [AllowAnonymous]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> UpdateProducts(string id, Account accountIn)
+        {
+            var account = await _accountService.GetByIdAsync(id);
+
+            if (id != accountIn.Id || account == null || accountIn.Id != account.Id)
+            {
+                return NotFound();
+            }
+
+            await _accountService.UpdateProductsAsync(accountIn);
 
             return NoContent();
         }
@@ -156,7 +185,7 @@ namespace MongoDbTest.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Delete(string id)
         {
-            var account = await _accountService.GetAsync(id);
+            var account = await _accountService.GetByIdAsync(id);
 
             if (account == null)
             {
