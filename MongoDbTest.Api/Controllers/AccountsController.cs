@@ -102,8 +102,7 @@ namespace MongoDbTest.Api.Controllers
                 return NotFound();
             }
 
-            account.Id = ObjectId.GenerateNewId().ToString();
-            //DocumentValidator validator = new DocumentValidator();
+            //account.Id = ObjectId.GenerateNewId().ToString();
             var result = await _accountValidator.ValidateAsync(account);
 
             return Ok(result);

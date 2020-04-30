@@ -27,5 +27,8 @@ namespace MongoDbTest.Infrastructure.Models
         [BsonElement("products")]
         [BsonIgnoreIfNull]
         public List<string> Products { get; set; }
+
+        [BsonIgnore]
+        public string Error { get; set;}
     }
 }

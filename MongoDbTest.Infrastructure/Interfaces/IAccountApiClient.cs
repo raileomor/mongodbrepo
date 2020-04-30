@@ -5,6 +5,6 @@ namespace MongoDbTest.Infrastructure.Interfaces
 {
     public interface IAccountApiClient
     {
-        Task<bool> ExistAsync(string id);
+        Task<Account> GetAccountByIdAsync(string id);
     }
 }

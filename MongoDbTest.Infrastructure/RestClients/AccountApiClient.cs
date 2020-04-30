@@ -2,6 +2,8 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDbTest.Infrastructure.Interfaces;
+using MongoDbTest.Infrastructure.Models;
+using Newtonsoft.Json;
 
 namespace MongoDbTest.Infrastructure.RestClients
 {
@@ -17,15 +19,16 @@ namespace MongoDbTest.Infrastructure.RestClients
             _httpClient.DefaultRequestHeaders.Add("ContentType", DefaultRequestMediaType);
         }
 
-        public async Task<bool> ExistAsync(string id)
+        public async Task<Account> GetAccountByIdAsync(string id)
         {
-            bool response = false;
+            Account response = null;
 
             HttpResponseMessage responseMessage = await _httpClient.GetAsync($"accounts/{id}");
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                response = true;
+                string data = await responseMessage.Content.ReadAsStringAsync();
+                response = !string.IsNullOrEmpty(data) ? JsonConvert.DeserializeObject<Account>(data) : null;
             }
             else
             {
@@ -35,7 +38,7 @@ namespace MongoDbTest.Infrastructure.RestClients
                 }
                 catch (Exception)
                 {
-                    response = false;
+                    response = null;
                 }
             }
 
