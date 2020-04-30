@@ -7,6 +7,9 @@ using MongoDbTest.Infrastructure.Services;
 using MongoDbTest.Infrastructure.Repositories;
 using MongoDbTest.Infrastructure.Repositories.Configurations;
 using MongoDbTest.Infrastructure.RestClients;
+using MongoDbTest.Infrastructure.Validators;
+using FluentValidation;
+using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Api.Infrastructure
 {
@@ -25,6 +28,7 @@ namespace MongoDbTest.Api.Infrastructure
             services.AddConfiguration(configuration);
             services.AddSwaggerDocumentation(configuration);
             services.AddScoped(configuration);
+            services.AddTransient(configuration);
             services.AddClients(configuration);
         }
 
@@ -41,13 +45,26 @@ namespace MongoDbTest.Api.Infrastructure
         }
 
         /// <summary>/
+        /// Add services
+        /// </summary>
+        /// <param name="services">Services</param>
+        /// <param name="configuration">Configuration</param>
+        public static void AddTransient(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddTransient<IAccountValidator, AccountValidator>();
+            services.AddTransient<IAccountExistValidator, AccountExistValidator>();
+            services.AddTransient<IAccountLimitValidator, AccountLimitValidator>();
+            services.AddTransient<IAccountProviderValidator, AccountProviderValidator>();
+        }
+
+        /// <summary>/
         /// Add clients
         /// </summary>
         /// <param name="services">Services</param>
         /// <param name="configuration">Configuration</param>
         public static void AddClients(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHttpClient<IDocumentApiClient, DocumentApiClient>();
+            services.AddHttpClient<IAccountApiClient, AccountApiClient>();
         }
 
         /// <summary>

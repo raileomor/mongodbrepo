@@ -5,12 +5,12 @@ using MongoDbTest.Infrastructure.Interfaces;
 
 namespace MongoDbTest.Infrastructure.RestClients
 {
-    public class DocumentApiClient : IDocumentApiClient
+    public class AccountApiClient : IAccountApiClient
     {
         private readonly HttpClient _httpClient;
         private const string DefaultRequestMediaType = "application/json";
 
-        public DocumentApiClient(HttpClient httpClient)
+        public AccountApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("http://localhost:5000/");

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,14 +23,17 @@ namespace MongoDbTest.Api.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IAccountServices _accountService;
+        private readonly IAccountValidator _accountValidator;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="accountService"></param>
-        public AccountsController(IAccountServices accountService)
+        /// <param name="documentValidator"></param>
+        public AccountsController(IAccountServices accountService, IAccountValidator accountValidator)
         {
             _accountService = accountService;
+            _accountValidator = accountValidator;
         }
 
         /// <summary>
@@ -99,8 +103,8 @@ namespace MongoDbTest.Api.Controllers
             }
 
             account.Id = ObjectId.GenerateNewId().ToString();
-            DocumentValidator validator = new DocumentValidator();
-            var result = await validator.ValidateAsync(account);
+            //DocumentValidator validator = new DocumentValidator();
+            var result = await _accountValidator.ValidateAsync(account);
 
             return Ok(result);
         }

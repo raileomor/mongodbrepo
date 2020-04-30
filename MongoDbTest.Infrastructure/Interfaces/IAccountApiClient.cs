@@ -3,7 +3,7 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Interfaces
 {
-    public interface IDocumentApiClient
+    public interface IAccountApiClient
     {
         Task<bool> ExistAsync(string id);
     }

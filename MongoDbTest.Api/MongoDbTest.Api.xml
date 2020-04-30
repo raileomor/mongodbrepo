@@ -12,11 +12,12 @@
             Administrador de cuentas
             </summary>
         </member>
-        <member name="M:MongoDbTest.Api.Controllers.AccountsController.#ctor(MongoDbTest.Infrastructure.Interfaces.IAccountServices)">
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.#ctor(MongoDbTest.Infrastructure.Interfaces.IAccountServices,MongoDbTest.Infrastructure.Interfaces.IAccountValidator)">
             <summary>
             Constructor
             </summary>
             <param name="accountService"></param>
+            <param name="documentValidator"></param>
         </member>
         <member name="M:MongoDbTest.Api.Controllers.AccountsController.Get">
             <summary>
@@ -112,6 +113,13 @@
             <param name="configuration">Configuration</param>
         </member>
         <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.AddScoped(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>/
+            Add services
+            </summary>
+            <param name="services">Services</param>
+            <param name="configuration">Configuration</param>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.AddTransient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>/
             Add services
             </summary>
