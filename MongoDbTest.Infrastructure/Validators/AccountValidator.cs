@@ -10,17 +10,21 @@ namespace MongoDbTest.Infrastructure.Validators
         private readonly IAccountLimitValidator _accountLimitValidator;
         private readonly IAccountProviderValidator _accountProviderValidator;
 
+        private readonly IAccountProductValidator _accountProductValidator;
+
         public AccountValidator(IAccountExistValidator accountExistValidator,
                                 IAccountProviderValidator accountProviderValidator,
-                                IAccountLimitValidator accountLimitValidator)
+                                IAccountLimitValidator accountLimitValidator,
+                                IAccountProductValidator accountProductValidator)
         {
             _accountExistValidator = accountExistValidator;
             _accountLimitValidator = accountLimitValidator;
             _accountProviderValidator = accountProviderValidator;
-            //AddRule(new CompositeValidatorRule(new DocumentLimitValidator(), new DocumentProviderValidator(), new DocumentExistValidator()));
-            Include(_accountProviderValidator);
-            Include(_accountLimitValidator);
-            Include(_accountExistValidator);
+            _accountProductValidator = accountProductValidator;
+            AddRule(new CompositeValidatorRule(_accountExistValidator,
+                                            _accountLimitValidator,
+                                            _accountProviderValidator,
+                                            _accountProductValidator));
         }
     }
 }
