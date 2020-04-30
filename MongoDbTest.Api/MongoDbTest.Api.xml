@@ -37,6 +37,16 @@
             <param name="id"></param>
             <returns>Return Account</returns>
         </member>
+        <member name="M:MongoDbTest.Api.Controllers.AccountsController.ValidateAccount(System.String)">
+            <summary>
+            Get Account by Id
+            </summary>
+            <summary xml:lang="es">
+            Obtener Cuenta por Id
+            </summary>
+            <param name="id"></param>
+            <returns>Return Account</returns>
+        </member>
         <member name="M:MongoDbTest.Api.Controllers.AccountsController.FindAccounts(MongoDbTest.Infrastructure.Models.Account)">
             <summary>
             Get Accounts by filter
@@ -104,6 +114,13 @@
         <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.AddScoped(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>/
             Add services
+            </summary>
+            <param name="services">Services</param>
+            <param name="configuration">Configuration</param>
+        </member>
+        <member name="M:MongoDbTest.Api.Infrastructure.ApiInitialize.AddClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>/
+            Add clients
             </summary>
             <param name="services">Services</param>
             <param name="configuration">Configuration</param>

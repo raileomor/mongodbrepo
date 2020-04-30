@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDbTest.Infrastructure.Interfaces;
 using MongoDbTest.Infrastructure.Models;
+using MongoDbTest.Infrastructure.Validators;
 
 namespace MongoDbTest.Api.Controllers
 {
@@ -71,6 +74,35 @@ namespace MongoDbTest.Api.Controllers
             }
 
             return Ok(account);
+        }
+
+        /// <summary>
+        /// Get Account by Id
+        /// </summary>
+        /// <summary xml:lang="es">
+        /// Obtener Cuenta por Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Return Account</returns>
+        [HttpGet("{id:length(24)}/validate")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ValidationResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> ValidateAccount(string id)
+        {
+            var account = await _accountService.GetByIdAsync(id);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            account.Id = ObjectId.GenerateNewId().ToString();
+            DocumentValidator validator = new DocumentValidator();
+            var result = await validator.ValidateAsync(account);
+
+            return Ok(result);
         }
 
         /// <summary>

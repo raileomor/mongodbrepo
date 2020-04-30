@@ -6,6 +6,7 @@ using MongoDbTest.Infrastructure.Interfaces;
 using MongoDbTest.Infrastructure.Services;
 using MongoDbTest.Infrastructure.Repositories;
 using MongoDbTest.Infrastructure.Repositories.Configurations;
+using MongoDbTest.Infrastructure.RestClients;
 
 namespace MongoDbTest.Api.Infrastructure
 {
@@ -24,6 +25,7 @@ namespace MongoDbTest.Api.Infrastructure
             services.AddConfiguration(configuration);
             services.AddSwaggerDocumentation(configuration);
             services.AddScoped(configuration);
+            services.AddClients(configuration);
         }
 
         /// <summary>/
@@ -36,6 +38,16 @@ namespace MongoDbTest.Api.Infrastructure
             services.AddScoped<IMongoDbRepositoryContext, MongoDbRepositoryContext>();
             services.AddScoped<IAccountServices, AccountServices>();
             services.AddScoped<IMongoDbAccountRepository, MongoDbAccountRepository>();
+        }
+
+        /// <summary>/
+        /// Add clients
+        /// </summary>
+        /// <param name="services">Services</param>
+        /// <param name="configuration">Configuration</param>
+        public static void AddClients(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient<IDocumentApiClient, DocumentApiClient>();
         }
 
         /// <summary>
