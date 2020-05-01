@@ -52,6 +52,7 @@ namespace MongoDbTest.Api.Infrastructure
         public static void AddTransient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IAccountValidator, AccountValidator>();
+            services.AddTransient<IAccountValidationRule, CompositeValidatorRule>();
             services.AddTransient<IAccountExistValidator, AccountExistValidator>();
             services.AddTransient<IAccountLimitValidator, AccountLimitValidator>();
             services.AddTransient<IAccountProviderValidator, AccountProviderValidator>();

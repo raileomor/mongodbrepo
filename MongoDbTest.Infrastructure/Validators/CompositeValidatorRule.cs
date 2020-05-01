@@ -6,22 +6,33 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.Validators;
+using MongoDbTest.Infrastructure.Interfaces;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class CompositeValidatorRule : IValidationRule
+    public class CompositeValidatorRule : IAccountValidationRule
     {
-        private readonly IValidator[] _validators;
+        private readonly List<IValidator> _validators;
 
-        public CompositeValidatorRule(params IValidator[] validators)
+        private ValidationResult[] _results;
+
+        public CompositeValidatorRule()
         {
-            _validators = validators;
+            _validators = new List<IValidator>();
         }
 
         public IEnumerable<IPropertyValidator> Validators
         {
             get { yield break; }
         }
+
+        public void Add(IValidator validator)
+        {
+            if (validator != null)
+                _validators.Add(validator);
+        }
+
+        public IEnumerable<ValidationResult> Results => _results.ToList();
 
         public string[] RuleSets
         {
@@ -47,10 +58,11 @@ namespace MongoDbTest.Infrastructure.Validators
         {
             var result = new List<ValidationFailure>();
             //List<Task<ValidationResult>> tasks = new List<Task<ValidationResult>>();
-
-            IEnumerable<Task<ValidationResult>> tasks = _validators.Select(val => val.ValidateAsync(context));
+            var _valArray = _validators.ToArray();
+            IEnumerable<Task<ValidationResult>> tasks = _valArray.Select(val => val.ValidateAsync(context));
 
             ValidationResult[]  validationResults = await Task.WhenAll(tasks);
+            _results = validationResults;
 
             foreach (var vr in validationResults)
             {

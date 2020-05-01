@@ -5,8 +5,9 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Interfaces
 {
-    public interface IAccountValidator: IValidator<Account>
+    public interface IAccountValidationRule: IValidationRule
     {
         IEnumerable<ValidationResult> Results { get; }
+        void Add(IValidator validator);
     }
 }

@@ -90,7 +90,7 @@ namespace MongoDbTest.Api.Controllers
         /// <returns>Return Account</returns>
         [HttpGet("{id:length(24)}/validate")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(ValidationResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationResult>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> ValidateAccount(string id)
@@ -103,9 +103,9 @@ namespace MongoDbTest.Api.Controllers
             }
 
             //account.Id = ObjectId.GenerateNewId().ToString();
-            var result = await _accountValidator.ValidateAsync(account);
-
-            return Ok(result);
+            var result = await _accountValidator.ValidateAsync(account, ruleSet: "*");
+            var a = _accountValidator.Results;
+            return Ok(a);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace MongoDbTest.Infrastructure.Validators
     {
         public AccountProviderValidator()
         {
-            RuleFor(x => x.ProviderId).Equal(Guid.Parse("4adfdbdd-050e-4a83-b08a-4b6afaa00610"));
+            RuleFor(x => x.ProviderId).Equal(Guid.Parse("9089e103-3f0f-41e0-a0f9-c1d1d870c27a"));
         }
     }
 }
