@@ -14,17 +14,17 @@ namespace MongoDbTest.Infrastructure.Validators
     public class AccountValidatorRules : IAccountValidationRule
     {
         private readonly List<IValidator> _validators;
-
-        private ValidationResult[] _results;
+        private readonly List<ValidationResult> _results;
+        public IEnumerable<ValidationResult> Results => _results.ToList();
+        public IEnumerable<IPropertyValidator> Validators
+        {
+            get { yield break; }
+        }
 
         public AccountValidatorRules()
         {
             _validators = new List<IValidator>();
-        }
-
-        public IEnumerable<IPropertyValidator> Validators
-        {
-            get { yield break; }
+            _results = new List<ValidationResult>();
         }
 
         public void Add(IValidator<Account> validator)
@@ -32,8 +32,6 @@ namespace MongoDbTest.Infrastructure.Validators
             if (validator != null)
                 _validators.Add(validator);
         }
-
-        public IEnumerable<ValidationResult> Results => _results.ToList();
 
         public string[] RuleSets
         {
@@ -52,25 +50,33 @@ namespace MongoDbTest.Infrastructure.Validators
 
         public IEnumerable<ValidationFailure> Validate(ValidationContext context)
         {
-            throw new NotImplementedException();
+            var failures = new List<ValidationFailure>();
+            var validationResults = _validators.Select(val => val.Validate(context));
+
+            _results.AddRange(validationResults.ToList());
+
+            foreach (var vr in validationResults)
+            {
+                failures.AddRange(vr.Errors);
+            }
+
+            return failures;
         }
 
         public async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation)
         {
-            var result = new List<ValidationFailure>();
-            //List<Task<ValidationResult>> tasks = new List<Task<ValidationResult>>();
-            var _valArray = _validators.ToArray();
-            IEnumerable<Task<ValidationResult>> tasks = _valArray.Select(val => val.ValidateAsync(context));
+            var failures = new List<ValidationFailure>();
+            IEnumerable<Task<ValidationResult>> tasks = _validators.Select(val => val.ValidateAsync(context));
 
-            ValidationResult[]  validationResults = await Task.WhenAll(tasks);
-            _results = validationResults;
+            var validationResults = await Task.WhenAll(tasks);
+            _results.AddRange(validationResults.ToList());
 
             foreach (var vr in validationResults)
             {
-                result.AddRange(vr.Errors);
+                failures.AddRange(vr.Errors);
             }
 
-            return result;
+            return failures;
         }
     }
 }
