@@ -17,7 +17,7 @@
             Constructor
             </summary>
             <param name="accountService"></param>
-            <param name="documentValidator"></param>
+            <param name="accountValidator"></param>
         </member>
         <member name="M:MongoDbTest.Api.Controllers.AccountsController.Get">
             <summary>
@@ -40,13 +40,13 @@
         </member>
         <member name="M:MongoDbTest.Api.Controllers.AccountsController.ValidateAccount(System.String)">
             <summary>
-            Get Account by Id
+            Validate Account by Id
             </summary>
             <summary xml:lang="es">
-            Obtener Cuenta por Id
+            Validar Cuenta por Id
             </summary>
             <param name="id"></param>
-            <returns>Return Account</returns>
+            <returns>Return Validation Results</returns>
         </member>
         <member name="M:MongoDbTest.Api.Controllers.AccountsController.FindAccounts(MongoDbTest.Infrastructure.Models.Account)">
             <summary>

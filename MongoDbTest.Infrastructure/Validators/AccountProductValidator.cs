@@ -4,7 +4,7 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class AccountProductValidator: AbstractValidator<Account>, IAccountProductValidator
+    public class AccountProductValidator: AbstractValidator<Account>
     {
         public AccountProductValidator()
         {

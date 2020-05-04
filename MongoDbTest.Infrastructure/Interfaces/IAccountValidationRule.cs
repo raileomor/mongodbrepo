@@ -8,6 +8,6 @@ namespace MongoDbTest.Infrastructure.Interfaces
     public interface IAccountValidationRule: IValidationRule
     {
         IEnumerable<ValidationResult> Results { get; }
-        void Add(IValidator validator);
+        void Add(IValidator<Account> validator);
     }
 }

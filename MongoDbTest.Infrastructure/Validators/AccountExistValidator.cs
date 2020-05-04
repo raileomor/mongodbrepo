@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class AccountExistValidator : AbstractValidator<Account>, IAccountExistValidator
+    public class AccountExistValidator : AbstractValidator<Account>
     {
         private readonly IAccountApiClient _documentApiClient;
         public AccountExistValidator(IAccountApiClient documentApiClient) {

@@ -8,23 +8,19 @@ namespace MongoDbTest.Infrastructure.Validators
 {
     public class AccountValidator: AbstractValidator<Account>, IAccountValidator
     {
-        private readonly IAccountExistValidator _accountExistValidator;
-        private readonly IAccountLimitValidator _accountLimitValidator;
-        private readonly IAccountProviderValidator _accountProviderValidator;
-        private readonly IAccountProductValidator _accountProductValidator;
+        private readonly IAccountApiClient _accountApiClient;
         private readonly IAccountValidationRule _accountValidationRule;
+        public IEnumerable<ValidationResult> Results => _accountValidationRule.Results;
 
-        public AccountValidator(IAccountValidationRule accountValidationRule,
-                                IAccountExistValidator accountExistValidator,
-                                IAccountProviderValidator accountProviderValidator,
-                                IAccountLimitValidator accountLimitValidator,
-                                IAccountProductValidator accountProductValidator)
+        public AccountValidator(IAccountApiClient accountApiClient)
         {
-            _accountValidationRule = accountValidationRule;
-            _accountExistValidator = accountExistValidator;
-            _accountLimitValidator = accountLimitValidator;
-            _accountProviderValidator = accountProviderValidator;
-            _accountProductValidator = accountProductValidator;
+            _accountApiClient = accountApiClient;
+            _accountValidationRule = new AccountValidatorRules();
+
+            var _accountExistValidator = new AccountExistValidator(_accountApiClient);
+            var _accountLimitValidator = new AccountLimitValidator();
+            var _accountProviderValidator = new AccountProviderValidator();
+            var _accountProductValidator = new AccountProductValidator();
 
             _accountValidationRule.Add(_accountExistValidator);
             _accountValidationRule.Add(_accountLimitValidator);
@@ -33,7 +29,5 @@ namespace MongoDbTest.Infrastructure.Validators
 
             AddRule(_accountValidationRule);
         }
-
-        public IEnumerable<ValidationResult> Results => _accountValidationRule.Results;
     }
 }

@@ -4,7 +4,7 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class AccountLimitValidator: AbstractValidator<Account>, IAccountLimitValidator
+    public class AccountLimitValidator: AbstractValidator<Account>
     {
         public AccountLimitValidator()
         {

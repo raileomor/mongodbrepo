@@ -7,16 +7,17 @@ using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.Validators;
 using MongoDbTest.Infrastructure.Interfaces;
+using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class CompositeValidatorRule : IAccountValidationRule
+    public class AccountValidatorRules : IAccountValidationRule
     {
         private readonly List<IValidator> _validators;
 
         private ValidationResult[] _results;
 
-        public CompositeValidatorRule()
+        public AccountValidatorRules()
         {
             _validators = new List<IValidator>();
         }
@@ -26,7 +27,7 @@ namespace MongoDbTest.Infrastructure.Validators
             get { yield break; }
         }
 
-        public void Add(IValidator validator)
+        public void Add(IValidator<Account> validator)
         {
             if (validator != null)
                 _validators.Add(validator);

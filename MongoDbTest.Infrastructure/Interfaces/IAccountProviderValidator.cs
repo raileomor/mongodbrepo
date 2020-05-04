@@ -3,5 +3,5 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Interfaces
 {
-    public interface IAccountProviderValidator: IValidator<Account>{}
+    public interface IAccountProviderValidator{}
 }

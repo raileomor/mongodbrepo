@@ -29,7 +29,7 @@ namespace MongoDbTest.Api.Controllers
         /// Constructor
         /// </summary>
         /// <param name="accountService"></param>
-        /// <param name="documentValidator"></param>
+        /// <param name="accountValidator"></param>
         public AccountsController(IAccountServices accountService, IAccountValidator accountValidator)
         {
             _accountService = accountService;
@@ -81,13 +81,13 @@ namespace MongoDbTest.Api.Controllers
         }
 
         /// <summary>
-        /// Get Account by Id
+        /// Validate Account by Id
         /// </summary>
         /// <summary xml:lang="es">
-        /// Obtener Cuenta por Id
+        /// Validar Cuenta por Id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Return Account</returns>
+        /// <returns>Return Validation Results</returns>
         [HttpGet("{id:length(24)}/validate")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(IEnumerable<ValidationResult>), (int)HttpStatusCode.OK)]
