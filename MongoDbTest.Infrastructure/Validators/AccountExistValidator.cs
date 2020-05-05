@@ -13,12 +13,10 @@ namespace MongoDbTest.Infrastructure.Validators
         private readonly IAccountApiClient _documentApiClient;
         public AccountExistValidator(IAccountApiClient documentApiClient) {
             _documentApiClient = documentApiClient;
-            RuleSet("AccountExist", () => {
-                RuleFor(x => x.Id).CustomAsync(async (id, context, cancellation) => {
-                    Account account = await _documentApiClient.GetAccountByIdAsync(id);
-                    if (account != null)
-                        context.AddFailure("GetAccount", JsonConvert.SerializeObject(account));
-                });
+            RuleFor(x => x.Id).CustomAsync(async (id, context, cancellation) => {
+                Account account = await _documentApiClient.GetAccountByIdAsync(id);
+                if (account != null)
+                    context.AddFailure("GetAccount", JsonConvert.SerializeObject(account));
             });
         }
     }

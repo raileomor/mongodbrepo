@@ -103,7 +103,7 @@ namespace MongoDbTest.Api.Controllers
             }
 
             //account.Id = ObjectId.GenerateNewId().ToString();
-            var result = await _accountValidator.ValidateAsync(account, ruleSet: "*");
+            var result = await _accountValidator.ValidateAsync(account);
             var a = _accountValidator.Results;
             return Ok(a);
         }

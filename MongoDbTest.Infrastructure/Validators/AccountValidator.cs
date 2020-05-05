@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using MongoDbTest.Infrastructure.Interfaces;
@@ -6,28 +8,43 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class AccountValidator: AbstractValidator<Account>, IAccountValidator
+    public class AccountValidator: IAccountValidator
     {
+        private readonly List<IValidator> _validators = new List<IValidator>();
+        private readonly List<ValidationResult> _results = new List<ValidationResult>();
         private readonly IAccountApiClient _accountApiClient;
-        private readonly IAccountValidationRule _accountValidationRule;
-        public IEnumerable<ValidationResult> Results => _accountValidationRule.Results;
+        public IEnumerable<ValidationResult> Results => _results;
 
         public AccountValidator(IAccountApiClient accountApiClient)
         {
             _accountApiClient = accountApiClient;
-            _accountValidationRule = new AccountValidatorRules();
 
             var _accountExistValidator = new AccountExistValidator(_accountApiClient);
             var _accountLimitValidator = new AccountLimitValidator();
             var _accountProviderValidator = new AccountProviderValidator();
             var _accountProductValidator = new AccountProductValidator();
 
-            _accountValidationRule.Add(_accountExistValidator);
-            _accountValidationRule.Add(_accountLimitValidator);
-            _accountValidationRule.Add(_accountProviderValidator);
-            _accountValidationRule.Add(_accountProductValidator);
+            _validators.Add(_accountExistValidator);
+            _validators.Add(_accountLimitValidator);
+            _validators.Add(_accountProviderValidator);
+            _validators.Add(_accountProductValidator);
+        }
 
-            AddRule(_accountValidationRule);
+        public async Task<IEnumerable<ValidationFailure>> ValidateAsync(Account account)
+        {
+            var context = new ValidationContext<Account>(account);
+            var failures = new List<ValidationFailure>();
+            IEnumerable<Task<ValidationResult>> tasks = _validators.Select(val => val.ValidateAsync(context));
+
+            var validationResults = await Task.WhenAll(tasks);
+            _results.AddRange(validationResults.ToList());
+
+            foreach (var vr in validationResults)
+            {
+                failures.AddRange(vr.Errors);
+            }
+
+            return failures;
         }
     }
 }

@@ -8,8 +8,6 @@ using MongoDbTest.Infrastructure.Repositories;
 using MongoDbTest.Infrastructure.Repositories.Configurations;
 using MongoDbTest.Infrastructure.RestClients;
 using MongoDbTest.Infrastructure.Validators;
-using FluentValidation;
-using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Api.Infrastructure
 {
@@ -52,7 +50,6 @@ namespace MongoDbTest.Api.Infrastructure
         public static void AddTransient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IAccountValidator, AccountValidator>();
-            services.AddTransient<IAccountValidationRule, AccountValidatorRules>();
         }
 
         /// <summary>/
