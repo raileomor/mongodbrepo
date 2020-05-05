@@ -11,10 +11,9 @@ namespace MongoDbTest.Infrastructure.Validators
     public class AccountValidator: IAccountValidator
     {
         private readonly List<IValidator> _validators = new List<IValidator>();
-        private readonly List<ValidationResult> _results = new List<ValidationResult>();
         private readonly IAccountApiClient _accountApiClient;
-        private readonly List<ValidatorResult> _allResults = new List<ValidatorResult>();
-        public IEnumerable<ValidatorResult> Results => _allResults;
+        private readonly List<ValidatorResult> _results = new List<ValidatorResult>();
+        public IEnumerable<ValidatorResult> Results => _results;
 
         public AccountValidator(IAccountApiClient accountApiClient)
         {
@@ -34,17 +33,21 @@ namespace MongoDbTest.Infrastructure.Validators
         public async Task<bool> ValidateAsync(Account account)
         {
             var context = new ValidationContext<Account>(account);
-            IEnumerable<Task<ValidationResult>> tasks = _validators.Select(val => val.ValidateAsync(context));
+            List<Task<ValidationResult>> tasks = new List<Task<ValidationResult>>();
 
-            var validationResults = await Task.WhenAll(tasks);
-            _results.AddRange(validationResults.ToList());
-
-            foreach (var vr in validationResults)
+            for (int i=0;i<_validators.Count;i++)
             {
-                _allResults.Add(new ValidatorResult(vr));
+                tasks.Add(_validators[i].ValidateAsync(context));
             }
 
-            return _allResults.All(r => r.IsValid);
+            await Task.WhenAll(tasks);
+
+            for (int i=0;i<tasks.Count;i++)
+            {
+                _results.Add(new ValidatorResult(tasks[i].Result, _validators[i]));
+            }
+
+            return _results.All(r => r.IsValid);
         }
     }
 }

@@ -4,8 +4,10 @@ using MongoDbTest.Infrastructure.Models;
 
 namespace MongoDbTest.Infrastructure.Validators
 {
-    public class AccountProductValidator: AbstractValidator<Account>
+    public class AccountProductValidator: AbstractValidator<Account>, IValidatorResult
     {
+        public string Rule => "ContainsProducts";
+        public object ServiceResult => null;
         public AccountProductValidator()
         {
             RuleFor(x => x.Products).Must(x => x.Contains("InvestmentStock")).WithMessage("InvestmentStock no encontrado");

@@ -8,8 +8,7 @@ namespace MongoDbTest.Infrastructure.Interfaces
 {
     public interface IValidatorResult
     {
-        bool IsValid { get; }
-        IEnumerable<ValidatorError> Errors { get; }
+        string Rule { get; }
         object ServiceResult { get; }
     }
 }
