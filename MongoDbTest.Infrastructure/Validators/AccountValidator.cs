@@ -13,7 +13,8 @@ namespace MongoDbTest.Infrastructure.Validators
         private readonly List<IValidator> _validators = new List<IValidator>();
         private readonly List<ValidationResult> _results = new List<ValidationResult>();
         private readonly IAccountApiClient _accountApiClient;
-        public IEnumerable<ValidationResult> Results => _results;
+        private readonly List<ValidatorResult> _allResults = new List<ValidatorResult>();
+        public IEnumerable<ValidatorResult> Results => _allResults;
 
         public AccountValidator(IAccountApiClient accountApiClient)
         {
@@ -30,10 +31,9 @@ namespace MongoDbTest.Infrastructure.Validators
             _validators.Add(_accountProductValidator);
         }
 
-        public async Task<IEnumerable<ValidationFailure>> ValidateAsync(Account account)
+        public async Task<bool> ValidateAsync(Account account)
         {
             var context = new ValidationContext<Account>(account);
-            var failures = new List<ValidationFailure>();
             IEnumerable<Task<ValidationResult>> tasks = _validators.Select(val => val.ValidateAsync(context));
 
             var validationResults = await Task.WhenAll(tasks);
@@ -41,10 +41,10 @@ namespace MongoDbTest.Infrastructure.Validators
 
             foreach (var vr in validationResults)
             {
-                failures.AddRange(vr.Errors);
+                _allResults.Add(new ValidatorResult(vr));
             }
 
-            return failures;
+            return _allResults.All(r => r.IsValid);
         }
     }
 }

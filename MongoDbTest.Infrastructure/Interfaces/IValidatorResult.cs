@@ -6,10 +6,10 @@ using MongoDbTest.Infrastructure.Validators;
 
 namespace MongoDbTest.Infrastructure.Interfaces
 {
-    public interface IAccountValidator
+    public interface IValidatorResult
     {
-        IEnumerable<ValidatorResult> Results { get; }
-
-        Task<bool> ValidateAsync(Account account);
+        bool IsValid { get; }
+        IEnumerable<ValidatorError> Errors { get; }
+        object ServiceResult { get; }
     }
 }
